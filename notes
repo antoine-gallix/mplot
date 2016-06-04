@@ -1,0 +1,15 @@
+first define primitive objects
+pitches
+
+pitch_set : set of absolute pitches
+circular_pitch_set : set of absolute pitches
+relative_set : set of relative pitches
+circular_relative_set : set of relative pitches
+
+use frozenset as key of a chord dict
+
+use an internal representation of pitch class with homonymes
+
+difference between interval and absolute interval
+
+interval equality rules?
