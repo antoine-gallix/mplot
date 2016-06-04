@@ -10,6 +10,13 @@ use frozenset as key of a chord dict
 
 use an internal representation of pitch class with homonymes
 
-difference between interval and absolute interval
 
-interval equality rules?
+-----------------------------------------------
+cannot add interval to intervalclassset
+could make a translation
+
+need to be able to make an interval from other interval
+
+
+------------------------------------------
+
