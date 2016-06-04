@@ -40,21 +40,22 @@ class Interval():
     """
 
     def prepare_interval(self, interval):
-        # change incoming int to correct int
+        # transformation of the integer that represents the interval, child
+        # class override this functions
         return interval
 
-    def set_interval(self, interval):
+    def __init__(self, interval):
+        # the internal represantation of the interval is an integer
+        # acceptable intervals are integers and other Interval objects
         if isinstance(interval, int):
+            # set internal interval from int
             self.interval = self.prepare_interval(interval)
         elif isinstance(interval, Interval):
+            # set internal interval from other Interval
             self.interval = self.prepare_interval(interval.interval)
         else:
             raise TypeError(
                 "type must be one of {}".format(["int", "Interval"]))
-
-    def __init__(self, interval):
-        # the internal represantation of the interval is an integer
-        self.set_interval(interval)
 
     def __str__(self):
         return str(self.interval)
