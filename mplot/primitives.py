@@ -39,14 +39,22 @@ class Interval():
     """an interval
     """
 
-    def validate_interval(self, interval):
-        if not isinstance(interval, int):
-            raise TypeError("interval must be an integer")
+    def prepare_interval(self, interval):
+        # change incoming int to correct int
         return interval
+
+    def set_interval(self, interval):
+        if isinstance(interval, int):
+            self.interval = self.prepare_interval(interval)
+        elif isinstance(interval, Interval):
+            self.interval = self.prepare_interval(interval.interval)
+        else:
+            raise TypeError(
+                "type must be one of {}".format(["int", "Interval"]))
 
     def __init__(self, interval):
         # the internal represantation of the interval is an integer
-        self.interval = self.validate_interval(interval)
+        self.set_interval(interval)
 
     def __str__(self):
         return str(self.interval)
@@ -84,7 +92,7 @@ class AbsoluteInterval(Interval):
     """a positive interval
     """
 
-    def validate_interval(self, interval):
+    def prepare_interval(self, interval):
         return abs(interval)
 
 
@@ -92,7 +100,7 @@ class IntervalClass(Interval):
     """an interval reduced inside an octave
     """
 
-    def validate_interval(self, interval):
+    def prepare_interval(self, interval):
         return interval % 12
 
 
@@ -101,6 +109,9 @@ class IntervalSet():
 
     def validate_interval(self, interval):
         if not isinstance(interval, self.internal_interval_class):
+            # try conversion
+            return self.internal_interval_class(interval)
+
             raise TypeError("interval must have type " +
                             str(self.internal_interval_class))
         return interval
@@ -115,6 +126,15 @@ class IntervalSet():
     def __str__(self):
         return str([str(e) for e in self._set])
 
+    def __eq__(self, other_interval_set):
+        if not isinstance(other_interval_set, IntervalSet):
+            raise TypeError(
+                "IntervalSet can only compare to another IntervalSet")
+        return self._set == other_interval_set._set
+
+
+class IntervalClassSet(IntervalSet):
+    internal_interval_class = IntervalClass
 
 # ---------------------Pitches---------------------
 
