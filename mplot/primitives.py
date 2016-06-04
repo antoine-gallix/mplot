@@ -6,17 +6,7 @@ pitch class :
 
 from collections import namedtuple
 
-
-valid_pitch_class_names = set([
-    'Ab', 'A', 'A#',
-    'Bb', 'B', 'B#',
-    'Cb', 'C', 'C#',
-    'Db', 'D', 'D#',
-    'Eb', 'E', 'E#',
-    'Fb', 'F', 'F#',
-    'Gb', 'G', 'G#',
-])
-
+# ---------------------Intervals---------------------
 Interval = namedtuple('Interval', ['short', 'long'])
 
 named_intervals = [
@@ -45,32 +35,32 @@ named_intervals = [
 ]
 
 
-class PitchClass():
-    """A pitch class like C, F#, B, ...
-    """
-
-    def __init__(self, pitch_class_name):
-        if pitch_class_name in valid_pitch_class_names:
-            self.pitch_class = pitch_class_name
-        else:
-            raise ValueError, "invalid pitch class name: {}".format(pitch_class_name)
-
-    def __str__(self):
-        return self.pitch_class
-
-
 class Interval():
     """an interval
     """
 
     def validate_interval(self, interval):
+        if not isinstance(interval, int):
+            raise TypeError("interval must be an integer")
         return interval
 
     def __init__(self, interval):
+        # the internal represantation of the interval is an integer
         self.interval = self.validate_interval(interval)
 
     def __str__(self):
         return str(self.interval)
+
+    def __eq__(self, interval):
+        # two intervals are equal if they have the same internal interger
+        # representation
+        if not isinstance(interval, Interval):
+            raise NotImplemented
+        return self.interval == interval.interval
+
+    def __hash__(self):
+        # intervals are identified by their internal integer representation
+        return self.interval
 
     def name(self, name_type='short'):
         """try to name the interval, short and long form available
@@ -104,3 +94,50 @@ class IntervalClass(Interval):
 
     def validate_interval(self, interval):
         return interval % 12
+
+
+class IntervalSet():
+    internal_interval_class = Interval
+
+    def validate_interval(self, interval):
+        if not isinstance(interval, self.internal_interval_class):
+            raise TypeError("interval must have type " +
+                            str(self.internal_interval_class))
+        return interval
+
+    def __init__(self):
+        self._set = set([])
+
+    def add(self, interval):
+        validated = self.validate_interval(interval)
+        self._set.add(validated)
+
+    def __str__(self):
+        return str([str(e) for e in self._set])
+
+
+# ---------------------Pitches---------------------
+
+valid_pitch_class_names = set([
+    'Ab', 'A', 'A#',
+    'Bb', 'B', 'B#',
+    'Cb', 'C', 'C#',
+    'Db', 'D', 'D#',
+    'Eb', 'E', 'E#',
+    'Fb', 'F', 'F#',
+    'Gb', 'G', 'G#',
+])
+
+
+class PitchClass():
+    """A pitch class like C, F#, B, ...
+    """
+
+    def __init__(self, pitch_class_name):
+        if pitch_class_name in valid_pitch_class_names:
+            self.pitch_class = pitch_class_name
+        else:
+            raise ValueError, "invalid pitch class name: {}".format(pitch_class_name)
+
+    def __str__(self):
+        return self.pitch_class

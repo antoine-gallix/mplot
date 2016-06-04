@@ -1,7 +1,7 @@
 import context
 context.set_path()
 from pytest import raises
-from mplot.primitives import PitchClass, Interval, AbsoluteInterval, IntervalClass
+from mplot.primitives import PitchClass, Interval, AbsoluteInterval, IntervalClass, IntervalSet
 
 
 # ---------------------pitch class---------------------
@@ -44,6 +44,16 @@ def test_negative_interval():
     assert(str(i) == '-30')
     assert(i.name() == '-30')
 
+
+def test_non_int_interval():
+    with raises(TypeError):
+        Interval("mille")
+
+
+def test_interval_equality():
+    assert Interval(4) == Interval(4)
+    assert Interval(4) != Interval(5)
+
 # --------------------AbsoluteInterval----------------------
 
 
@@ -73,3 +83,11 @@ def test_interval_class():
     assert(str(i) == '2')
     i = IntervalClass(-2)
     assert(str(i) == '10')
+
+# ---------------------IntervalSet---------------------
+
+
+def test_interval_set_wrong_addition():
+    ints = IntervalSet()
+    with raises(TypeError):
+        ints.add(1000)
