@@ -63,9 +63,15 @@ class Interval():
     def __eq__(self, interval):
         # two intervals are equal if they have the same internal interger
         # representation
-        if not isinstance(interval, Interval):
-            raise NotImplemented
-        return self.interval == interval.interval
+        if isinstance(interval, Interval):
+            # compare to other Interval
+            return self.interval == interval.interval
+        elif isinstance(interval, int):
+            # compare to int
+            return self.interval == interval
+        else:
+            raise NotImplementedError(
+                "Interval compare only to other Interval or int")
 
     def __hash__(self):
         # intervals are identified by their internal integer representation

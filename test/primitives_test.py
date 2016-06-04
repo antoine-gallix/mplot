@@ -54,6 +54,26 @@ def test_interval_equality():
     assert Interval(4) == Interval(4)
     assert Interval(4) != Interval(5)
 
+
+def test_interval_from_other_interval():
+    i = Interval(4)
+    ai = AbsoluteInterval(-4)
+    ic = IntervalClass(16)
+
+    i2 = Interval(i)
+    assert i2 == i
+
+    i3 = Interval(ai)
+    assert i3 == ai
+
+    i4 = Interval(ic)
+    assert i4 == ic
+
+
+def test_compare_interval_to_integer():
+    i = Interval(4)
+    assert i == 4
+
 # --------------------AbsoluteInterval----------------------
 
 
@@ -72,6 +92,13 @@ def test_negative_absolute_interval():
     assert(i.name() == 'b3')
     assert(i.name('long') == 'minor 3rd')
 
+
+def test_create_absolute_interval_from_interval():
+    # creation from interval should work and make conversion
+    i = Interval(-5)
+    ai = AbsoluteInterval(i)
+    assert ai == Interval(5)
+
 # --------------------IntervalClass----------------------
 
 
@@ -82,6 +109,13 @@ def test_interval_class():
     assert(str(i) == '2')
     i = IntervalClass(-2)
     assert(str(i) == '10')
+
+
+def test_create_interval_class_from_interval():
+    # creation from interval should work and make conversion
+    i = Interval(16)
+    ic = IntervalClass(i)
+    assert ic == Interval(4)
 
 # ---------------------IntervalSet---------------------
 from copy import deepcopy
