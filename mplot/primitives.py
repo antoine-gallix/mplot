@@ -172,10 +172,15 @@ class PitchClass():
     """
 
     def __init__(self, pitch_class_name):
-        if pitch_class_name in valid_pitch_class_names:
+        """pitch class must be initialized with a valid pitch class name
+        """
+        if self.validate(pitch_class_name):
             self.pitch_class = pitch_class_name
         else:
             raise ValueError, "invalid pitch class name: {}".format(pitch_class_name)
 
     def __str__(self):
         return self.pitch_class
+
+    def validate(self, pitch_class_name):
+        return pitch_class_name in valid_pitch_class_names
