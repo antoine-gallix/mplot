@@ -120,10 +120,11 @@ class IntervalSet():
     def validate_interval(self, interval):
         if not isinstance(interval, self.internal_interval_class):
             # try conversion
-            return self.internal_interval_class(interval)
-
-            raise TypeError("interval must have type " +
-                            str(self.internal_interval_class))
+            try:
+                return self.internal_interval_class(interval)
+            except TypeError:
+                raise TypeError("interval must have type " +
+                                str(self.internal_interval_class))
         return interval
 
     def __init__(self):
