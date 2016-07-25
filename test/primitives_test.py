@@ -9,11 +9,18 @@ from mplot.primitives import PitchClass, Interval, AbsoluteInterval, IntervalCla
 
 def test_valid_pitch_class():
     PitchClass('A')
+    PitchClass('D#')
+    PitchClass('Gb')
 
 
 def test_wrong_pitch_class():
     with raises(ValueError):
         PitchClass('Z')
+
+
+def test_string():
+    p = PitchClass('A')
+    assert 'A' == str(p)
 
 
 # --------------------interval----------------------
