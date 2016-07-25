@@ -46,7 +46,7 @@ class Interval():
 
     def __init__(self, interval):
         # the internal represantation of the interval is an integer
-        # acceptable intervals are integers and other Interval objects
+        # acceptable initial values are integers or Interval objects
         if isinstance(interval, int):
             # set internal interval from int
             self.interval = self.prepare_interval(interval)
@@ -112,6 +112,9 @@ class IntervalClass(Interval):
 
 
 class IntervalSet():
+    """a set of intervals, to represent scales and chords relative to a central point
+    """
+
     internal_interval_class = Interval
 
     def validate_interval(self, interval):
@@ -127,6 +130,8 @@ class IntervalSet():
         self._set = set([])
 
     def add(self, interval):
+        """add an interval to the ser
+        """
         validated = self.validate_interval(interval)
         self._set.add(validated)
 
@@ -134,6 +139,9 @@ class IntervalSet():
         return str([str(e) for e in self._set])
 
     def __eq__(self, other_interval_set):
+        """comparison of two interval sets
+        """
+
         if not isinstance(other_interval_set, IntervalSet):
             raise TypeError(
                 "IntervalSet can only compare to another IntervalSet")
@@ -141,6 +149,8 @@ class IntervalSet():
 
 
 class IntervalClassSet(IntervalSet):
+    """a set of intervals inside an octave
+    """
     internal_interval_class = IntervalClass
 
 # ---------------------Pitches---------------------
