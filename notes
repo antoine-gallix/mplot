@@ -1,3 +1,9 @@
+how to raise or lower an interval
+
+make an absolute pitch class
+
+-----------------------------------------------
+
 first define primitive objects
 pitches
 
@@ -12,11 +18,9 @@ use an internal representation of pitch class with homonymes
 
 
 -----------------------------------------------
-cannot add interval to intervalclassset
-could make a translation
-
 need to be able to make an interval from other interval
 
-
+compare interval to integers
 ------------------------------------------
 
+comment untrack files

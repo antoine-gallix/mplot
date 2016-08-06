@@ -1,11 +1,13 @@
 import context
 context.set_path()
 from pytest import raises
-from mplot.primitives import PitchClass, Interval, AbsoluteInterval, IntervalClass, IntervalSet, IntervalClassSet
+from mplot.primitives import PitchClass, Interval, AbsoluteInterval, IntervalClass, IntervalSet, IntervalClassSet, Pitch
+
+
+# ---------------------pitch---------------------
 
 
 # ---------------------pitch class---------------------
-
 
 def test_valid_pitch_class():
     PitchClass('A')
@@ -23,7 +25,82 @@ def test_string():
     assert 'A' == str(p)
 
 
+def test_location():
+    p = PitchClass('A')
+    p._location() == 0
+
+
+def test_add_interval():
+    p = PitchClass('A')
+    i = Interval(3)
+    raised = p + i
+    assert raised == PitchClass('C')
+
+
+def test_add_interval_type_error():
+    p = PitchClass('A')
+    i = 3
+    with raises(TypeError):
+        p + i
+
+
+def test_add_negative_interval_wrap():
+    p = PitchClass('A')
+    i = Interval(-3)
+    raised = p + i
+    assert raised == PitchClass('F#')
+
+
+def test_add_interval_wrap():
+    p = PitchClass('F')
+    i = Interval(7)
+    raised = p + i
+    assert raised == PitchClass('C')
+
+
+def test_add_negative_interval():
+    p = PitchClass('G')
+    i = Interval(-7)
+    raised = p + i
+    assert raised == PitchClass('C')
+
+
+def test_substract_interval():
+    p = PitchClass('C')
+    i = Interval(7)
+    lowered = p - i
+    assert lowered == PitchClass('F')
+
+
+def test_add_absolute_interval():
+    p = PitchClass('C')
+    i = AbsoluteInterval(-7)
+    raised = p + i
+    assert raised == PitchClass('G')
+
+
+def test_substract_absolute_interval():
+    p = PitchClass('C')
+    i = AbsoluteInterval(-7)
+    raised = p - i
+    assert raised == PitchClass('F')
+
+
+def test_add_interval_class():
+    p = PitchClass('C')
+    i = IntervalClass(16)
+    raised = p + i
+    assert raised == PitchClass('E')
+
+
+def test_substract_interval_class():
+    p = PitchClass('C')
+    i = IntervalClass(16)
+    raised = p - i
+    assert raised == PitchClass('Ab')
+
 # --------------------interval----------------------
+
 
 def test_correct_small_interval():
     i = Interval(3)

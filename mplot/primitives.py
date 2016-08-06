@@ -5,6 +5,7 @@ pitch class :
 """
 
 from collections import namedtuple
+from data_structures import CircularList
 
 # ---------------------Intervals---------------------
 Interval = namedtuple('Interval', ['short', 'long'])
@@ -77,6 +78,10 @@ class Interval():
         # intervals are identified by their internal integer representation
         return self.interval
 
+    def as_int(self):
+        # integer representation of the interval
+        return self.interval
+
     def name(self, name_type='short'):
         """try to name the interval, short and long form available
         """
@@ -131,7 +136,7 @@ class IntervalSet():
         self._set = set([])
 
     def add(self, interval):
-        """add an interval to the ser
+        """add an interval to the set
         """
         validated = self.validate_interval(interval)
         self._set.add(validated)
@@ -166,21 +171,91 @@ valid_pitch_class_names = set([
     'Gb', 'G', 'G#',
 ])
 
+pitch_class_circle = CircularList([
+    ['A'],
+    ['Bb', 'A#'],
+    ['B', 'Cb'],
+    ['C', 'B#'],
+    ['C#', 'Db'],
+    ['D'],
+    ['D#', 'Eb'],
+    ['E', 'Fb'],
+    ['F', 'E#'],
+    ['F#', 'Gb'],
+    ['G'],
+    ['Ab', 'G#'],
+])
+
 
 class PitchClass():
     """A pitch class like C, F#, B, ...
+    Internal state is the name itself if validated.
     """
 
     def __init__(self, pitch_class_name):
-        """pitch class must be initialized with a valid pitch class name
+        """pitch class must be initialized with a valid pitch class name.
+        Invalid pitch name leads to a ValueError.
         """
-        if self.validate(pitch_class_name):
+        if self._validate(pitch_class_name):
             self.pitch_class = pitch_class_name
         else:
             raise ValueError, "invalid pitch class name: {}".format(pitch_class_name)
 
     def __str__(self):
+        """str conversion is the name itself
+        """
         return self.pitch_class
 
-    def validate(self, pitch_class_name):
+    def _validate(self, pitch_class_name):
+
         return pitch_class_name in valid_pitch_class_names
+
+    def _locate(self, pitch_class_name):
+        """locate a pitch class in the pitch class circle
+        """
+        for l, pitch_class in pitch_class_circle.enumerate():
+            if pitch_class_name in pitch_class:
+                return l
+        raise ValueError, "invalid pitch class name: {}".format(pitch_class_name)
+
+    def _location(self):
+        return self._locate(self.pitch_class)
+
+    def add_interval(self, interval):
+        """add an interval to the pitch class. a pitch class wraps. ex: PitchClass(G) + Interval(2) = PitchClass(A)
+        """
+        new_location = self._location() + interval.as_int()
+        return PitchClass(pitch_class_circle[new_location][0])
+
+    def __add__(self, thing):
+        if isinstance(thing, Interval):
+            return self.add_interval(thing)
+        else:
+            raise TypeError('substracted value shall be an Interval')
+
+    def __sub__(self, interval):
+        """add an interval to the pitch class. a pitch class wraps. ex: PitchClass(A) - Interval(2) = PitchClass(G)
+        """
+        new_location = self._location() - interval.as_int()
+        return PitchClass(pitch_class_circle[new_location][0])
+
+    def __eq__(self, pitchclass):
+        return self._location() == pitchclass._location()
+
+
+class Pitch(PitchClass):
+    """An absolute pitch like A4, Db6
+    """
+    pass
+
+
+class PitchClassSet():
+    """a set of pitch class, like the theorical notes of a chord or a scale
+    """
+    pass
+
+
+class PitchSet():
+    """a set of pitch class, like a real chord of scale
+    """
+    pass
